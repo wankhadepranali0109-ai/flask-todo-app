@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Focus | To-Do App</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <main class="app-shell">
+    <header class="hero">
+      <p class="eyebrow">FOCUS!!</p>
+      <h1>To-Do App</h1>
+      <p class="hero-text">Turn small intentions into finished work.</p>
+    </header>
+
+    <section class="dashboard">
+      <div id="summary" class="summary-grid">
+        <article class="summary-card">
+          <span>All tasks</span>
+          <strong id="totalCount">0</strong>
+        </article>
+        <article class="summary-card">
+          <span>Pending</span>
+          <strong id="pendingCount">0</strong>
+        </article>
+        <article class="summary-card">
+          <span>Completed</span>
+          <strong id="completedCount">0</strong>
+        </article>
+        <article class="summary-card danger">
+          <span>Overdue</span>
+          <strong id="overdueCount">0</strong>
+        </article>
+      </div>
+
+      <nav class="tabs" aria-label="Task filters">
+        <button class="tab active" data-filter="all">All</button>
+        <button class="tab" data-filter="today">Today</button>
+        <button class="tab" data-filter="pending">Pending</button>
+        <button class="tab" data-filter="overdue">Overdue</button>
+      </nav>
+
+      <div class="section-heading">
+        <div>
+          <p class="section-label">MY LIST</p>
+          <h2>Tasks</h2>
+        </div>
+        <button id="openFormButton" class="primary-button">+ Add task</button>
+      </div>
+
+      <form id="taskForm" class="task-form hidden">
+        <input id="title" type="text" placeholder="What needs your attention?" required>
+        <input id="dueDate" type="date" required>
+
+        <select id="priority">
+          <option value="low">Low priority</option>
+          <option value="medium" selected>Medium priority</option>
+          <option value="high">High priority</option>
+        </select>
+
+        <select id="category">
+          <option value="Learning">Learning</option>
+          <option value="Work">Work</option>
+          <option value="Personal" selected>Personal</option>
+        </select>
+
+        <select id="energy">
+          <option value="quick">Quick win</option>
+          <option value="focused" selected>Focused work</option>
+          <option value="deep-focus">Deep focus</option>
+        </select>
+
+        <div class="form-actions">
+          <button type="button" id="cancelFormButton" class="secondary-button">Cancel</button>
+          <button type="submit" class="primary-button">Save task</button>
+        </div>
+      </form>
+
+      <p id="emptyMessage" class="empty-message hidden">
+        No tasks here yet. Add one small, meaningful task.
+      </p>
+
+      <div id="activeTaskList" class="task-list"></div>
+
+      <button id="completedToggle" class="completed-toggle">
+        Completed tasks <span id="completedArrow">▾</span>
+      </button>
+
+      <div id="completedTaskList" class="task-list completed-list hidden"></div>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
