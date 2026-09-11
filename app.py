@@ -1,37 +1,57 @@
 from datetime import date
+import json
+import os
 from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
 
-tasks = [
-    {
-        "id": 1,
-        "title": "Draft project proposal",
-        "due_date": "2026-09-10",
-        "priority": "high",
-        "category": "Work",
-        "energy": "deep-focus",
-        "completed": False,
-    },
-    {
-        "id": 2,
-        "title": "Revise Docker notes",
-        "due_date": "2026-09-11",
-        "priority": "medium",
-        "category": "Learning",
-        "energy": "focused",
-        "completed": False,
-    },
-    {
-        "id": 3,
-        "title": "Buy groceries",
-        "due_date": "2026-09-12",
-        "priority": "low",
-        "category": "Personal",
-        "energy": "quick",
-        "completed": False,
-    },
-]
+DATA_DIR = os.environ.get("DATA_DIR", "/app/data")
+TASKS_FILE = os.path.join(DATA_DIR, "tasks.json")
+
+
+def default_tasks():
+    return [
+        {
+            "id": 1,
+            "title": "Draft project proposal",
+            "due_date": "2026-09-10",
+            "priority": "high",
+            "category": "Work",
+            "energy": "deep-focus",
+            "completed": False,
+        },
+        {
+            "id": 2,
+            "title": "Revise Docker notes",
+            "due_date": "2026-09-11",
+            "priority": "medium",
+            "category": "Learning",
+            "energy": "focused",
+            "completed": False,
+        },
+    ]
+
+
+def load_tasks():
+    os.makedirs(DATA_DIR, exist_ok=True)
+
+    if not os.path.exists(TASKS_FILE):
+        initial_tasks = default_tasks()
+        save_tasks(initial_tasks)
+        return initial_tasks
+
+    with open(TASKS_FILE, "r", encoding="utf-8") as file:
+        return json.load(file)
+
+
+def save_tasks(task_list):
+    os.makedirs(DATA_DIR, exist_ok=True)
+
+    with open(TASKS_FILE, "w", encoding="utf-8") as file:
+        json.dump(task_list, file, indent=2)
+
+
+tasks = load_tasks()
 
 
 def find_task(task_id):
@@ -94,6 +114,7 @@ def create_task():
     }
 
     tasks.append(new_task)
+    save_tasks(tasks)
     return jsonify(new_task), 201
 
 
@@ -119,6 +140,7 @@ def update_task(task_id):
         if field in data:
             task[field] = data[field]
 
+    save_tasks(tasks)
     return jsonify(task)
 
 
@@ -130,6 +152,7 @@ def delete_task(task_id):
         return jsonify({"error": "Task not found."}), 404
 
     tasks.remove(task)
+    save_tasks(tasks)
     return "", 204
 
 
