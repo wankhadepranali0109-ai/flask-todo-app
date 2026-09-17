@@ -1,8 +1,0 @@
-aws_region           = "us-east-1"
-project_name         = "flask-todo"
-environment          = "test"
-image_tag            = "1.0"
-desired_count        = 1
-vpc_cidr             = "20.10.0.0/16"
-public_subnet_1_cidr = "20.10.1.0/24"
-public_subnet_2_cidr = "20.10.2.0/24"

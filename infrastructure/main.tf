@@ -1,5 +1,5 @@
 module "todo_app" {
-  source = "../../modules/todo-app"
+  source = "./modules/todo-app"
 
   aws_region           = var.aws_region
   project_name         = var.project_name

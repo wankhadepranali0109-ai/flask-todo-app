@@ -1,5 +1,5 @@
 resource "aws_security_group" "alb" {
-  name        = "${var.project_name}-alb-sg"
+  name        = "${var.project_name}-${var.environment}-alb-sg"
   description = "Allow public HTTP access to the Application Load Balancer"
   vpc_id      = aws_vpc.main.id
 
@@ -20,13 +20,14 @@ resource "aws_security_group" "alb" {
   }
 
   tags = {
-    Name    = "${var.project_name}-alb-sg"
+    Name    ="${var.project_name}-${var.environment}-alb-sg"
     Project = var.project_name
+    Environment = var.environment
   }
 }
 
 resource "aws_security_group" "ecs_tasks" {
-  name        = "${var.project_name}-ecs-tasks-sg"
+  name        ="${var.project_name}-${var.environment}-ecs-tasks-sg"
   description = "Allow Flask traffic only from the Application Load Balancer"
   vpc_id      = aws_vpc.main.id
 
@@ -47,7 +48,8 @@ resource "aws_security_group" "ecs_tasks" {
   }
 
   tags = {
-    Name    = "${var.project_name}-ecs-tasks-sg"
+    Name    = "${var.project_name}-${var.environment}-ecs-tasks-sg"
     Project = var.project_name
+    Environment = var.environment
   }
 }

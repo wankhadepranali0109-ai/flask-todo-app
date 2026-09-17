@@ -1,24 +1,26 @@
 resource "aws_cloudwatch_log_group" "app" {
-  name              = "/ecs/${var.project_name}"
+  name              ="/ecs/${var.project_name}-${var.environment}"
   retention_in_days = 7
 
   tags = {
-    Name    = "${var.project_name}-logs"
+    Name    = "${var.project_name}-${var.environment}-logs"
     Project = var.project_name
+    Environment = var.environment
   }
 }
 
 resource "aws_ecs_cluster" "app" {
-  name = "${var.project_name}-cluster"
+  name = "${var.project_name}-${var.environment}-cluster"
 
   tags = {
-    Name    = "${var.project_name}-cluster"
+    Name    = "${var.project_name}-${var.environment}-cluster"
     Project = var.project_name
+    Environment = var.environment
   }
 }
 
 resource "aws_ecs_task_definition" "app" {
-  family                   = "${var.project_name}-task"
+  family                   = "${var.project_name}-${var.environment}-task"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = "256"
@@ -46,24 +48,25 @@ resource "aws_ecs_task_definition" "app" {
         options = {
           awslogs-group         = aws_cloudwatch_log_group.app.name
           awslogs-region        = var.aws_region
-          awslogs-stream-prefix = "flask-todo"
+          awslogs-stream-prefix = "${var.project_name}-${var.environment}"
         }
       }
     }
   ])
 
   tags = {
-    Name    = "${var.project_name}-task"
+    Name    ="${var.project_name}-${var.environment}-task"
     Project = var.project_name
+    Environment = var.environment
   }
 }
 
 resource "aws_ecs_service" "app" {
-  name            = "${var.project_name}-service"
+  name            = "${var.project_name}-${var.environment}-service"
   cluster         = aws_ecs_cluster.app.id
   task_definition = aws_ecs_task_definition.app.arn
   launch_type     = "FARGATE"
-  desired_count   = 1
+  desired_count = var.desired_count
 
   network_configuration {
     subnets = [
@@ -86,7 +89,8 @@ resource "aws_ecs_service" "app" {
   ]
 
   tags = {
-    Name    = "${var.project_name}-service"
+    Name    ="${var.project_name}-${var.environment}-service"
     Project = var.project_name
+    Environment = var.environment
   }
 }

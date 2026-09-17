@@ -1,5 +1,5 @@
 resource "aws_lb" "app" {
-  name               = "${var.project_name}-alb"
+  name               = "${var.project_name}-${var.environment}-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
@@ -9,13 +9,14 @@ resource "aws_lb" "app" {
   ]
 
   tags = {
-    Name    = "${var.project_name}-alb"
+    Name    = "${var.project_name}-${var.environment}-alb"
     Project = var.project_name
+    Environment = var.environment
   }
 }
 
 resource "aws_lb_target_group" "app" {
-  name        = "${var.project_name}-tg"
+  name        = "${var.project_name}-${var.environment}-tg"
   port        = 8000
   protocol    = "HTTP"
   target_type = "ip"
@@ -34,8 +35,9 @@ resource "aws_lb_target_group" "app" {
   }
 
   tags = {
-    Name    = "${var.project_name}-tg"
+    Name    = "${var.project_name}-${var.environment}-tg"
     Project = var.project_name
+    Environment = var.environment
   }
 }
 

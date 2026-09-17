@@ -1,4 +1,3 @@
-
 .venv/
 .git/
 __pycache__/
@@ -6,3 +5,9 @@ __pycache__/
 .env
 *.log
 .vscode/
+
+# Terraform is not needed to run Flask in the container
+infrastructure/
+
+# Runtime data comes from a Docker volume, not the image
+data/
